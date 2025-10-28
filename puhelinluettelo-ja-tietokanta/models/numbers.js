@@ -15,9 +15,15 @@ mongoose.connect(url)
   })
 
 const phonenumberSchema = new mongoose.Schema({
-    name: String,
-    number: String,
-})
+    name: {
+      type: String,
+      minlength: 3,
+      required: true
+    },
+    number: {type: String,
+      required: true
+    }
+    })
 
 const PhoneNumber = mongoose.model('Phonenumber', phonenumberSchema)
 

@@ -3,6 +3,7 @@ import Person from './components/Person'
 import personsService from './services/persons'
 import PersonForm from './components/PersonForm'
 import Notification from './components/Notification'
+import Error from './components/Error'
 
 
 
@@ -13,6 +14,7 @@ const App = () => {
   const [persons, setPersons] = useState([])
   const [filteredPersons, setFP] = useState(persons)
   const [message, setMessage] = useState(null)
+  const [error, setError] = useState(null)
 
 
   useEffect(() => {
@@ -65,6 +67,15 @@ const App = () => {
                   }, 2000)
 
       })
+      .catch(error => {
+                  const errorMessage = error.response.data 
+                  setError(`${errorMessage.error}`)
+                  console.log(errorMessage.error)
+                  setTimeout(() => {
+                    setError(null)
+                  }, 2000)
+
+      })
 
 
   }
@@ -87,7 +98,7 @@ const App = () => {
       .deletePerson(id)
       .then(response => {
         console.log(response)
-        setMessage(`'${response.data.name}' deleted`)
+        setMessage(`'${person[0].name}' deleted`)
         setTimeout(() => {
             setMessage(null)
         }, 2000)
@@ -118,6 +129,7 @@ const App = () => {
 
   return (
     <div>
+      <Error message={error} />
       <Notification message={message} />
       <h2>Phonebook</h2>
       <div>
