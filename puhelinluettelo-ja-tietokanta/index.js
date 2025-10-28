@@ -12,14 +12,14 @@ const errorHandler = (error, request, response, next) => {
   console.log(error.message)
 
   if (error.name === 'CastError') {
-    return response.status(400).send({error: 'malformatted id'})
+    return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError'){
-    return response.status(400).json({error: error.message})
+    return response.status(400).json({ error: error.message })
   }
 
 
 
-next(error)
+  next(error)
 
 }
 
@@ -31,31 +31,31 @@ app.use(morgan('tiny'))
 
 
 
-app.get("/api/persons", (request, response) =>
-    Number.find({}).then((numbers) => {
-      response.json(numbers)
-    })
+app.get('/api/persons', (request, response) =>
+  Number.find({}).then((numbers) => {
+    response.json(numbers)
+  })
 
 )
 
-app.get("/api/info", (request, response) =>{
+app.get('/api/info', (request, response) => {
 
   const time = new Date()
 
-      Number.find({}).then((numbers) => {
-      response.send(`<p>Phonebook has info for ${numbers.length} people</p><p>${time}</p>`)
-    })
-  }
+  Number.find({}).then((numbers) => {
+    response.send(`<p>Phonebook has info for ${numbers.length} people</p><p>${time}</p>`)
+  })
+}
 )
 
 app.get('/api/persons/:id', (request, response, next) => {
 
   const id = request.params.id
   Number.findById(id)
-  .then((result) => {
-    response.json(result)
-  })
-  .catch((error) => next(error))
+    .then((result) => {
+      response.json(result)
+    })
+    .catch((error) => next(error))
 })
 
 
@@ -63,13 +63,14 @@ app.get('/api/persons/:id', (request, response, next) => {
 app.delete('/api/persons/:id', (request, response, next) => {
   const id = request.params.id
   Number.findByIdAndDelete(id)
-  .then((result) => {
-    response.status(204).end()
-  })
-  .catch((error) => next(error))
+    .then((result) => {
+      response.status(204).end()
+      console.log(result)
+    })
+    .catch((error) => next(error))
 
 
-  
+
 
 })
 
@@ -79,11 +80,11 @@ app.post('/api/persons', (request, response, next) => {
   console.log(body)
 
 
- 
 
- /*   if (!body.name || !body.number) {
-    return response.status(400).json({ 
-      error: 'name missing or number missing' 
+
+  /*   if (!body.name || !body.number) {
+    return response.status(400).json({
+      error: 'name missing or number missing'
     })
   }*/
 
@@ -91,19 +92,19 @@ app.post('/api/persons', (request, response, next) => {
 
   const number = new Number({
     name: body.name,
-    number: body.number, 
+    number: body.number,
     id: random_id
   })
 
-  
-  
+
+
   number.save().then(result => {
-        console.log("added", body.name, "number", body.number, "to phonebook")
-        response.json(result)
-        
-      })
-      .catch(error => next(error))
-    }
+    console.log('added', body.name, 'number', body.number, 'to phonebook')
+    response.json(result)
+
+  })
+    .catch(error => next(error))
+}
 )
 
 const unknownEndpoint = (request, response) => {
